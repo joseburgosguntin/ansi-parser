@@ -6,3 +6,5 @@ edition = "2018"
 
 [dependencies]
 nom = "4.2.3"
+num-traits = "0.2"
+num-derive = "0.2"
