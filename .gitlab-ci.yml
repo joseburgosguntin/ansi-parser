@@ -16,7 +16,7 @@ build:
   - cargo build --release
 
   cache:
-    key: cache-key
+    key: ansi-parse
     paths:
       - target
       - cargo_dir
@@ -26,3 +26,9 @@ test:
   script:
   - rustc --version && cargo --version      # Print version info for debugging
   - cargo test --all --verbose
+
+  cache:
+    key: ansi-parse
+    paths:
+      - target
+      - cargo_dir
