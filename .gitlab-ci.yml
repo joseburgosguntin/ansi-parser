@@ -24,6 +24,8 @@ build:
 test:
   stage: test
   script:
+  - HERE="$(readlink -f .)"
+  - CARGO_HOME="$HERE/cargo_dir/"
   - rustc --version && cargo --version      # Print version info for debugging
   - cargo test --all --verbose
 
