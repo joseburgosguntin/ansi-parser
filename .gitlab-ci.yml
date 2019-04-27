@@ -7,7 +7,6 @@ before_script:
 stages:
 - build
 - test
-- pages
 
 build:
   stage: build
@@ -29,24 +28,6 @@ test:
   - CARGO_HOME="$HERE/cargo_dir/"
   - rustc --version && cargo --version      # Print version info for debugging
   - cargo test --all --verbose
-
-  cache:
-    key: ansi-parse
-    paths:
-      - target
-      - cargo_dir
-
-pages:
-  stage: docs
-  script:
-  - HERE="$(readlink -f .)"
-  - CARGO_HOME="$HERE/cargo_dir/"
-  - cargo doc --no-deps
-  - mv target/doc/ansi_parser public
-
-  artifacts:
-      paths:
-        - public
 
   cache:
     key: ansi-parse
