@@ -1,5 +1,6 @@
 use num_derive::FromPrimitive;
 
+///A list of available text attributes.
 #[derive(Debug, PartialEq, FromPrimitive)]
 pub enum TextAttribute {
     Off          = 0,
@@ -10,6 +11,7 @@ pub enum TextAttribute {
     Concealed    = 8
 }
 
+///The basic ANSI colors.
 #[derive(Debug, PartialEq, FromPrimitive)]
 pub enum Color {
     Black   = 30,
@@ -22,6 +24,7 @@ pub enum Color {
     White   = 37
 }
 
+///The following are the implemented ANSI escape sequences. More to be added.
 #[derive(Debug, PartialEq)]
 pub enum AnsiSequence {
     CursorPos(u32, u32),
@@ -42,6 +45,9 @@ pub enum AnsiSequence {
     ResetMode(u8),
 }
 
+///This is what is outputted by the parsing iterator.
+///Each block contains either straight-up text, or simply
+///an ANSI escape sequence.
 #[derive(Debug, PartialEq)]
 pub enum Output<'a> {
     TextBlock(&'a str),

@@ -246,9 +246,11 @@ impl<'a> Iterator for ParserIterator<'a> {
     }
 }
 
-pub fn iterate_on<'a>(bytes: &'a str) -> ParserIterator<'a> {
-    ParserIterator {
-        dat: bytes.as_bytes(),
-        done: false
+impl<'a> ParserIterator<'a> {
+    pub fn new(string: &'a str) -> ParserIterator<'a> {
+        ParserIterator {
+            dat: string.as_bytes(),
+            done: false
+        }
     }
 }
