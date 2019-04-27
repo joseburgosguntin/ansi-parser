@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod tests;
+
 use num_derive::FromPrimitive;
 use num_derive::ToPrimitive;
 
@@ -63,7 +66,7 @@ pub enum AnsiSequence {
 use std::fmt::Display;
 impl Display for AnsiSequence {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(formatter, "\x27[")?;
+        write!(formatter, "\x1b[")?;
         
         use AnsiSequence::*;
         match self {

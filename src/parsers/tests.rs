@@ -33,7 +33,7 @@ fn test_reset_mode() {
 
 #[test]
 fn test_parser_iterator() {
-    let parse_str = "Hello, world? How are \x27[=7lyou? I hope you're doing well.";
+    let parse_str = "Hello, world? How are \x1b[=7lyou? I hope you're doing well.";
 
     let strings: Vec<Output> = ParserIterator::new(parse_str)
         .collect();

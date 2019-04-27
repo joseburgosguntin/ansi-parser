@@ -190,7 +190,7 @@ named!(
 named!(
     parse_escape<Output>,
     do_parse!(
-        tag_s!("\x27[") >>
+        tag_s!("\x1b[") >>
         seq: combined     >>
         (Output::Escape(seq))
     )
@@ -200,7 +200,7 @@ named!(
     parse_str<Output>,
     do_parse!(
         text: map_res!(
-            take_until!("\x27["),
+            take_until!("\x1b["),
             std::str::from_utf8
         ) >>
         (Output::TextBlock(text))
