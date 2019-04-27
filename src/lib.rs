@@ -9,7 +9,7 @@ mod parsers;
 /// + Erase Display
 /// + Erase Line
 /// + Set Graphics mode
-/// Set and Reset Text Mode
+/// + Set and Reset Text Mode
 ///
 /// This is done through a pulldown type parser, where an iterator is exposed. This essentially
 /// turns all of the ANSI sequences into enums and splits the string at every location that there
