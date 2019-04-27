@@ -2,12 +2,13 @@
 name = "ansi-parser"
 description = "A library using nom for parsing ANSI Escape Codes"
 homepage = "https://gitlab.com/DavidBittner/ansi-parser"
-version = "0.2.0"
 authors = ["David Bittner <bittneradave@gmail.com>"]
-edition = "2018"
 
+version = "0.2.0"
 license-file = "LICENSE" 
+documentation = "https://docs.rs/ansi-parser/"
 
+edition = "2018"
 [dependencies]
 nom = "4.2.3"
 num-traits = "0.2"
