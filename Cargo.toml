@@ -1,8 +1,13 @@
 [package]
 name = "ansi-parser"
+description = "A library using nom for parsing ANSI Escape Codes"
+homepage = "https://gitlab.com/DavidBittner/ansi-parser"
 version = "0.1.0"
 authors = ["David Bittner <bittneradave@gmail.com>"]
 edition = "2018"
+
+license      = "GPLv3"
+license-file = "LICENSE" 
 
 [dependencies]
 nom = "4.2.3"
