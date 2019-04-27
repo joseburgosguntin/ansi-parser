@@ -217,22 +217,38 @@ named!(
 
 pub struct ParserIterator<'a> {
     dat: &'a[u8],
+    done: bool
 }
 
 impl<'a> Iterator for ParserIterator<'a> {
     type Item = Output<'a>;
     
     fn next(&mut self) -> Option<Self::Item> {
-        let parse = parse_output(self.dat.as_bytes())
-            .unwrap();
+        if self.done {
+            return None;
+        }
+        let parse = parse_output(self.dat);
 
-        self.dat = parse.0;
-        Some(parse.1)
+        if parse.is_ok() {
+            let parse = parse.unwrap();
+
+            self.dat = parse.0;
+            Some(parse.1)
+        }else{
+            if self.done {
+                None
+            }else{
+                self.done = true;
+                Some(Output::TextBlock(std::str::from_utf8(self.dat)
+                    .unwrap()))
+            }
+        }
     }
 }
 
-pub fn iterate_on<'a>(bytes: &'a[u8]) -> ParserIterator<'a> {
+pub fn iterate_on<'a>(bytes: &'a str) -> ParserIterator<'a> {
     ParserIterator {
-        dat: bytes
+        dat: bytes.as_bytes(),
+        done: false
     }
 }

@@ -35,8 +35,7 @@ fn test_reset_mode() {
 fn test_parser_iterator() {
     let parse_str = "Hello, world? How are \x27[=7lyou? I hope you're doing well.";
 
-    let strings: Vec<Output> = iterate_on(parse_str.as_bytes())
-        .take(2)
+    let strings: Vec<Output> = iterate_on(parse_str)
         .collect();
 
     println!("{:#?}", strings);
