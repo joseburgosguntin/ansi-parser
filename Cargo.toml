@@ -2,7 +2,7 @@
 name = "ansi-parser"
 description = "A library using nom for parsing ANSI Escape Codes"
 homepage = "https://gitlab.com/DavidBittner/ansi-parser"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["David Bittner <bittneradave@gmail.com>"]
 edition = "2018"
 
