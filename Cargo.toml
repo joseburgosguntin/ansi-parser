@@ -6,7 +6,6 @@ authors = ["David Bittner <bittneradave@gmail.com>"]
 
 version = "0.2.0"
 license-file = "LICENSE" 
-documentation = "https://docs.rs/ansi-parser/"
 
 edition = "2018"
 [dependencies]
