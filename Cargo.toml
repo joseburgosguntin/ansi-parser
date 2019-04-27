@@ -5,7 +5,7 @@ homepage = "https://gitlab.com/DavidBittner/ansi-parser"
 authors = ["David Bittner <bittneradave@gmail.com>"]
 
 version = "0.3.0"
-license = "GPL3.0+"
+license = "MPL-2.0"
 
 edition = "2018"
 
