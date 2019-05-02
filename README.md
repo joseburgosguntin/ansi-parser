@@ -1,4 +1,4 @@
-[![pipeline status](https://gitlab.com/davidbittner/ansi-parser/badges/master/pipeline.svg?style=flat-square)](https://gitlab.com/davidbittner/ansi-parser/commits/master) ![deps](https://img.shields.io/librariesio/release/cargo/ansi-parser.svg?style=flat-square) ![license](https://img.shields.io/crates/l/ansi-parser.svg?style=flat-square) ![downloads](https://img.shields.io/crates/d/ansi-parser.svg?style=flat-square)
+[![pipeline status](https://img.shields.io/gitlab/pipeline/gitlab-org/gitlab-ce.svg?style=flat-square)](https://gitlab.com/davidbittner/ansi-parser/commits/master) ![deps](https://img.shields.io/librariesio/release/cargo/ansi-parser.svg?style=flat-square) ![license](https://img.shields.io/crates/l/ansi-parser.svg?style=flat-square) ![downloads](https://img.shields.io/crates/d/ansi-parser.svg?style=flat-square)
 # Ansi Escape Sequence Parser
 
 
