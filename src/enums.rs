@@ -1,47 +1,6 @@
 #[cfg(test)]
 mod tests;
 
-use num_derive::FromPrimitive;
-use num_derive::ToPrimitive;
-
-use num_traits::ToPrimitive;
-
-///A list of available text attributes.
-#[derive(Debug, PartialEq, FromPrimitive, ToPrimitive)]
-pub enum TextAttribute {
-    Off          = 0,
-    Bold         = 1,
-    Underscore   = 4,
-    Blink        = 5,
-    ReverseVideo = 7,
-    Concealed    = 8
-}
-
-impl Display for TextAttribute {
-    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(formatter, "{}", self.to_u8().unwrap_or(0))
-    }
-}
-
-///The basic ANSI colors.
-#[derive(Debug, PartialEq, FromPrimitive, ToPrimitive)]
-pub enum Color {
-    Black   = 30,
-    Red     = 31,
-    Green   = 32,
-    Yellow  = 33,
-    Blue    = 34,
-    Magenta = 35,
-    Cyan    = 36,
-    White   = 37
-}
-
-impl Display for Color {
-    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(formatter, "{}", self.to_u8().unwrap_or(0))
-    }
-}
-
 ///The following are the implemented ANSI escape sequences. More to be added.
 #[derive(Debug, PartialEq)]
 pub enum AnsiSequence {
@@ -54,13 +13,10 @@ pub enum AnsiSequence {
     CursorRestore,
     EraseDisplay,
     EraseLine,
-    SetGraphicsMode{
-        ta: TextAttribute,
-        fg: Color,
-        bg: Color
-    },
+    SetGraphicsMode(Vec<u32>),
     SetMode(u8),
     ResetMode(u8),
+//    HideCursor,
 }
 
 use std::fmt::Display;
@@ -88,8 +44,15 @@ impl Display for AnsiSequence {
                 => write!(formatter, "2J"),
             EraseLine
                 => write!(formatter, "K"),
-            SetGraphicsMode{ta, fg, bg}
-                => write!(formatter, "{};{};{}m", ta, fg, bg),
+            SetGraphicsMode(vec)
+                => {
+                    match vec.len() {
+                        1 => write!(formatter, "{}m", vec[0]),
+                        2 => write!(formatter, "{};{}m", vec[0], vec[1]),
+                        3 => write!(formatter, "{};{};{}m", vec[0], vec[1], vec[2]),
+                        _ => unreachable!()
+                    }
+                },
             SetMode(mode)
                 => write!(formatter, "={}h", mode),
             ResetMode(mode)

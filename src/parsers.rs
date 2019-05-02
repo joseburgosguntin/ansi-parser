@@ -1,55 +1,21 @@
 #[cfg(test)]
 mod tests;
 
-use crate::{AnsiSequence, Output, Color, TextAttribute};
+use crate::{AnsiSequence, Output};
 
-use num_traits::cast::FromPrimitive;
 use std::convert::TryInto;
 use nom::*;
 
 named!(
-    parse_int<u32>,
+    parse_int<&str, u32>,
     map_res!(
-        map_res!(
-            nom::digit,
-            std::str::from_utf8
-        ),
+        nom::digit,
         |s: &str| s.parse::<u32>()
     )
 );
 
 named!(
-    parse_fg_color<Color>,
-    do_parse!(
-        val: parse_int >>
-        worked: expr_opt!(FromPrimitive::from_u32(val)) >>
-        (worked)
-    )
-);
-
-named!(
-    parse_bg_color<Color>,
-    do_parse!(
-        val:    parse_int                               >>
-        val:    expr_opt!(val.checked_sub(10))          >>
-        worked: expr_opt!(FromPrimitive::from_u32(val)) >>
-        (worked)
-    )
-);
-
-named!(
-    parse_text_attr<TextAttribute>,
-    map!(
-        map!(
-            parse_int,
-            FromPrimitive::from_u32
-        ),
-        Option::unwrap
-    )
-);
-
-named!(
-    cursor_pos<AnsiSequence>,
+    cursor_pos<&str, AnsiSequence>,
     do_parse!(
         x: parse_int    >>
         tag!(";")       >>
@@ -63,7 +29,7 @@ named!(
 );
 
 named!(
-    cursor_up<AnsiSequence>,
+    cursor_up<&str, AnsiSequence>,
     do_parse!(
         am: parse_int >>
         tag!("A")     >>
@@ -72,7 +38,7 @@ named!(
 );
 
 named!(
-    cursor_down<AnsiSequence>,
+    cursor_down<&str, AnsiSequence>,
     do_parse!(
         am: parse_int >>
         tag!("B")     >>
@@ -81,7 +47,7 @@ named!(
 );
 
 named!(
-    cursor_forward<AnsiSequence>,
+    cursor_forward<&str, AnsiSequence>,
     do_parse!(
         am: parse_int >>
         tag!("C")     >>
@@ -90,7 +56,7 @@ named!(
 );
 
 named!(
-    cursor_backward<AnsiSequence>,
+    cursor_backward<&str, AnsiSequence>,
     do_parse!(
         am: parse_int >>
         tag!("D")     >>
@@ -99,7 +65,7 @@ named!(
 );
 
 named!(
-    cursor_save<AnsiSequence>,
+    cursor_save<&str, AnsiSequence>,
     do_parse!(
         tag!("s") >>
         (AnsiSequence::CursorSave)
@@ -107,7 +73,7 @@ named!(
 );
 
 named!(
-    cursor_restore<AnsiSequence>,
+    cursor_restore<&str, AnsiSequence>,
     do_parse!(
         tag!("u") >>
         (AnsiSequence::CursorRestore)
@@ -115,7 +81,7 @@ named!(
 );
 
 named!(
-    erase_display<AnsiSequence>,
+    erase_display<&str, AnsiSequence>,
     do_parse!(
         tag!("2J") >>
         (AnsiSequence::EraseDisplay)
@@ -123,7 +89,7 @@ named!(
 );
 
 named!(
-    erase_line<AnsiSequence>,
+    erase_line<&str, AnsiSequence>,
     do_parse!(
         tag!("K") >>
         (AnsiSequence::EraseDisplay)
@@ -131,24 +97,48 @@ named!(
 );
 
 named!(
-    graphics_mode<AnsiSequence>,
+    graphics_mode1<&str, AnsiSequence>,
     do_parse!(
-        ta: parse_text_attr >>
-        tag!(";")           >>
-        fg: parse_fg_color  >>
-        tag!(";")           >>
-        bg: parse_bg_color  >>
-        tag!("m")           >>
-        (AnsiSequence::SetGraphicsMode{
-            ta: ta,
-            fg: fg,
-            bg: bg
-        })
+        val: parse_int >>
+        tag!("m")      >>
+        (AnsiSequence::SetGraphicsMode(vec![val]))
     )
 );
 
 named!(
-    set_mode<AnsiSequence>,
+    graphics_mode2<&str, AnsiSequence>,
+    do_parse!(
+        val1: parse_int >>
+        tag!(";")       >>
+        val2: parse_int >>
+        tag!("m")       >>
+        (AnsiSequence::SetGraphicsMode(vec![val1, val2]))
+    )
+);
+
+named!(
+    graphics_mode3<&str, AnsiSequence>,
+    do_parse!(
+        val1: parse_int >>
+        tag!(";")       >>
+        val2: parse_int >>
+        tag!(";")       >>
+        val3: parse_int >>
+        tag!("m")       >>
+        (AnsiSequence::SetGraphicsMode(vec![val1, val2, val3]))
+    )
+);
+
+named!(
+    graphics_mode<&str, AnsiSequence>,
+    alt!(
+          graphics_mode1
+        | graphics_mode2
+        | graphics_mode3)
+);
+
+named!(
+    set_mode<&str, AnsiSequence>,
     do_parse!(
         tag!("=")                        >>
         mode: parse_int                  >>
@@ -159,7 +149,7 @@ named!(
 );
 
 named!(
-    reset_mode<AnsiSequence>,
+    reset_mode<&str, AnsiSequence>,
     do_parse!(
         tag!("=")                        >>
         mode: parse_int                  >>
@@ -170,7 +160,7 @@ named!(
 );
 
 named!(
-    combined<AnsiSequence>,
+    combined<&str, AnsiSequence>,
     alt!(
           cursor_pos
         | cursor_up
@@ -188,60 +178,59 @@ named!(
 );
 
 named!(
-    parse_escape<Output>,
+    parse_escape<&str, Output>,
     do_parse!(
-        tag_s!("\x1b[") >>
+        tag_s!("\u{1b}[") >>
         seq: combined     >>
         (Output::Escape(seq))
     )
 );
 
-named!(
-    parse_str<Output>,
-    do_parse!(
-        text: map_res!(
-            take_until!("\x1b["),
-            std::str::from_utf8
-        ) >>
-        (Output::TextBlock(text))
-    )
-);
-
-named!(
-    parse_output<Output>,
-    do_parse!(
-        out: alt!(parse_escape | parse_str) >>
-        (out)
-    )
-);
-
 pub struct ParserIterator<'a> {
-    dat: &'a[u8],
-    done: bool
+    dat: &'a str,
 }
 
 impl<'a> Iterator for ParserIterator<'a> {
     type Item = Output<'a>;
     
     fn next(&mut self) -> Option<Self::Item> {
-        if self.done {
+        if self.dat == "" {
             return None;
         }
-        let parse = parse_output(self.dat);
 
-        if parse.is_ok() {
-            let parse = parse.unwrap();
+        let pos = self.dat.find('\u{1b}');
+        if let Some(loc) = pos {
+            if loc == 0 {
+                let res = parse_escape(&self.dat[loc..]);
 
-            self.dat = parse.0;
-            Some(parse.1)
-        }else{
-            if self.done {
-                None
-            }else{
-                self.done = true;
-                Some(Output::TextBlock(std::str::from_utf8(self.dat)
-                    .unwrap()))
+                if let Ok(ret) = res {
+                    self.dat = &ret.0;
+                    Some(ret.1)
+                }else{
+                    let pos = self.dat[loc..].find('\x1b');
+                    if let Some(loc) = pos {
+                        let temp = &self.dat[..loc];
+                        self.dat = &self.dat[loc..];
+
+                        Some(Output::TextBlock(temp))
+                    }else{
+                        let temp = self.dat;
+                        self.dat = "";
+
+                        Some(Output::TextBlock(temp))
+                    }
+                }
+
+            }else {
+                let temp = &self.dat[..loc];
+                self.dat = &self.dat[loc..];
+
+                Some(Output::TextBlock(&temp))
             }
+        }else{
+            let temp = self.dat;
+            self.dat = "";
+            Some(Output::TextBlock(temp))
         }
     }
 }
@@ -249,8 +238,7 @@ impl<'a> Iterator for ParserIterator<'a> {
 impl<'a> ParserIterator<'a> {
     pub fn new(string: &'a str) -> ParserIterator<'a> {
         ParserIterator {
-            dat: string.as_bytes(),
-            done: false
+            dat: string,
         }
     }
 }
