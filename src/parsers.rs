@@ -207,8 +207,11 @@ impl<'a> Iterator for ParserIterator<'a> {
                     self.dat = &ret.0;
                     Some(ret.1)
                 }else{
-                    let pos = self.dat[loc..].find('\x1b');
+                    let pos = self.dat[(loc+1)..].find('\u{1b}');
                     if let Some(loc) = pos {
+                        //Added to because it's based one character ahead
+                        let loc = loc+1;
+
                         let temp = &self.dat[..loc];
                         self.dat = &self.dat[loc..];
 
