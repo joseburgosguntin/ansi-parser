@@ -160,6 +160,22 @@ named!(
 );
 
 named!(
+    hide_cursor<&str, AnsiSequence>,
+    do_parse!(
+        tag!("?25l") >>
+        (AnsiSequence::HideCursor)
+    )
+);
+
+named!(
+    show_cursor<&str, AnsiSequence>,
+    do_parse!(
+        tag!("?25h") >>
+        (AnsiSequence::ShowCursor)
+    )
+);
+
+named!(
     combined<&str, AnsiSequence>,
     alt!(
           cursor_pos
@@ -174,6 +190,8 @@ named!(
         | graphics_mode
         | set_mode
         | reset_mode
+        | hide_cursor
+        | show_cursor
     )
 );
 

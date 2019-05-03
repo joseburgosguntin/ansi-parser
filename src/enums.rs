@@ -16,13 +16,14 @@ pub enum AnsiSequence {
     SetGraphicsMode(Vec<u32>),
     SetMode(u8),
     ResetMode(u8),
-//    HideCursor,
+    HideCursor,
+    ShowCursor
 }
 
 use std::fmt::Display;
 impl Display for AnsiSequence {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(formatter, "\x1b[")?;
+        write!(formatter, "\u{1b}[")?;
         
         use AnsiSequence::*;
         match self {
@@ -56,7 +57,11 @@ impl Display for AnsiSequence {
             SetMode(mode)
                 => write!(formatter, "={}h", mode),
             ResetMode(mode)
-                => write!(formatter, "={}l", mode)
+                => write!(formatter, "={}l", mode),
+            ShowCursor
+                => write!(formatter, "?25h"),
+            HideCursor
+                => write!(formatter, "?25l")
         }
     }
 }
