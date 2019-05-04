@@ -17,7 +17,18 @@ pub enum AnsiSequence {
     SetMode(u8),
     ResetMode(u8),
     HideCursor,
-    ShowCursor
+    ShowCursor,
+    CursorToApp,
+    SetNewLineMode,
+    SetCol132,
+    SetSmoothScroll,
+    SetReverseVideo,
+    SetOriginRelative,
+    SetAutoWrap,
+    SetAutoRepeat,
+    SetInterlacing,
+    SetLineFeedMode,
+    SetCursorKeyToCursor,
 }
 
 use std::fmt::Display;
@@ -61,7 +72,29 @@ impl Display for AnsiSequence {
             ShowCursor
                 => write!(formatter, "?25h"),
             HideCursor
-                => write!(formatter, "?25l")
+                => write!(formatter, "?25l"),
+            CursorToApp
+                => write!(formatter, "?1h"),
+            SetNewLineMode
+                => write!(formatter, "20h"),
+            SetCol132
+                => write!(formatter, "?3h"),
+            SetSmoothScroll
+                => write!(formatter, "?4h"),
+            SetReverseVideo
+                => write!(formatter, "?5h"),
+            SetOriginRelative
+                => write!(formatter, "?6h"),
+            SetAutoWrap
+                => write!(formatter, "?7h"),
+            SetAutoRepeat
+                => write!(formatter, "?8h"),
+            SetInterlacing
+                => write!(formatter, "?9h"),
+            SetLineFeedMode
+                => write!(formatter, "20l"),
+            SetCursorKeyToCursor
+                => write!(formatter, "?1l")
         }
     }
 }

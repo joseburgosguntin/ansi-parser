@@ -61,6 +61,5 @@ fn test_parser_iterator_failure() {
     let strings: Vec<Output> = ParserIterator::new(parse_str)
         .collect();
 
-    println!("{:#?}", strings);
     assert_eq!(strings.len(), 6);
 }

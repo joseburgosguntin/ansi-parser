@@ -6,6 +6,18 @@ use crate::{AnsiSequence, Output};
 use std::convert::TryInto;
 use nom::*;
 
+macro_rules! tag_parser {
+    ($sig:ident, $tag:expr, $ret:expr) => {
+        named!(
+            $sig<&str, AnsiSequence>,
+            do_parse!(
+                tag!($tag) >>
+                ($ret)
+            )
+        );
+    }
+}
+
 named!(
     parse_int<&str, u32>,
     map_res!(
@@ -61,38 +73,6 @@ named!(
         am: parse_int >>
         tag!("D")     >>
         (AnsiSequence::CursorBackward(am))
-    )
-);
-
-named!(
-    cursor_save<&str, AnsiSequence>,
-    do_parse!(
-        tag!("s") >>
-        (AnsiSequence::CursorSave)
-    )
-);
-
-named!(
-    cursor_restore<&str, AnsiSequence>,
-    do_parse!(
-        tag!("u") >>
-        (AnsiSequence::CursorRestore)
-    )
-);
-
-named!(
-    erase_display<&str, AnsiSequence>,
-    do_parse!(
-        tag!("2J") >>
-        (AnsiSequence::EraseDisplay)
-    )
-);
-
-named!(
-    erase_line<&str, AnsiSequence>,
-    do_parse!(
-        tag!("K") >>
-        (AnsiSequence::EraseDisplay)
     )
 );
 
@@ -159,21 +139,21 @@ named!(
     )
 );
 
-named!(
-    hide_cursor<&str, AnsiSequence>,
-    do_parse!(
-        tag!("?25l") >>
-        (AnsiSequence::HideCursor)
-    )
-);
-
-named!(
-    show_cursor<&str, AnsiSequence>,
-    do_parse!(
-        tag!("?25h") >>
-        (AnsiSequence::ShowCursor)
-    )
-);
+tag_parser!(cursor_save,      "s", AnsiSequence::CursorSave);
+tag_parser!(cursor_restore,   "u", AnsiSequence::CursorRestore);
+tag_parser!(erase_display,   "2J", AnsiSequence::EraseDisplay);
+tag_parser!(erase_line,       "K", AnsiSequence::EraseLine);
+tag_parser!(hide_cursor,   "?25l", AnsiSequence::HideCursor);
+tag_parser!(show_cursor,   "?25h", AnsiSequence::ShowCursor);
+tag_parser!(cursor_to_app,  "?1h", AnsiSequence::CursorToApp);
+tag_parser!(new_line_mode,  "20h", AnsiSequence::SetNewLineMode);
+tag_parser!(col_132,        "?3h", AnsiSequence::SetCol132);
+tag_parser!(smooth_scroll,  "?4h", AnsiSequence::SetSmoothScroll);
+tag_parser!(reverse_video,  "?5h", AnsiSequence::SetReverseVideo);
+tag_parser!(origin_relative,"?6h", AnsiSequence::SetOriginRelative);
+tag_parser!(auto_wrap,      "?7h", AnsiSequence::SetAutoWrap);
+tag_parser!(auto_repeat,    "?8h", AnsiSequence::SetAutoRepeat);
+tag_parser!(interlacing,    "?9h", AnsiSequence::SetInterlacing);
 
 named!(
     combined<&str, AnsiSequence>,
@@ -192,6 +172,15 @@ named!(
         | reset_mode
         | hide_cursor
         | show_cursor
+        | cursor_to_app
+        | new_line_mode
+        | col_132
+        | smooth_scroll
+        | reverse_video
+        | origin_relative
+        | auto_wrap
+        | auto_repeat
+        | interlacing
     )
 );
 
