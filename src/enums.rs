@@ -131,3 +131,13 @@ pub enum Output<'a> {
     TextBlock(&'a str),
     Escape(AnsiSequence)
 }
+
+impl<'a> Display for Output<'a> {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+        use Output::*;
+        match self {
+            TextBlock(txt) => write!(formatter, "{}", txt),
+            Escape(seq) => write!(formatter, "{}", seq)
+        }
+    }
+}
