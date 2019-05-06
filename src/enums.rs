@@ -29,6 +29,14 @@ pub enum AnsiSequence {
     SetInterlacing,
     SetLineFeedMode,
     SetCursorKeyToCursor,
+    SetVT52,
+    SetCol80,
+    SetJumpScrolling,
+    SetNormalVideo,
+    SetOriginAbsolute,
+    ResetAutoWrap,
+    ResetAutoRepeat,
+    ResetInterlacing,
 }
 
 use std::fmt::Display;
@@ -94,7 +102,23 @@ impl Display for AnsiSequence {
             SetLineFeedMode
                 => write!(formatter, "20l"),
             SetCursorKeyToCursor
-                => write!(formatter, "?1l")
+                => write!(formatter, "?1l"),
+            SetVT52
+                => write!(formatter, "?2l"),
+            SetCol80
+                => write!(formatter, "?3l"),
+            SetJumpScrolling
+                => write!(formatter, "?4l"),
+            SetNormalVideo
+                => write!(formatter, "?5l"),
+            SetOriginAbsolute
+                => write!(formatter, "?6l"),
+            ResetAutoWrap
+                => write!(formatter, "?7l"),
+            ResetAutoRepeat
+                => write!(formatter, "?8l"),
+            ResetInterlacing
+                => write!(formatter, "?9l"),
         }
     }
 }
