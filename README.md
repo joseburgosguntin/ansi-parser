@@ -1,40 +1,47 @@
-![pipeline status](https://img.shields.io/gitlab/pipeline/gitlab-org/gitlab-ce.svg?style=flat-square) ![deps](https://img.shields.io/librariesio/release/cargo/ansi-parser.svg?style=flat-square) ![license](https://img.shields.io/crates/l/ansi-parser.svg?style=flat-square) ![downloads](https://img.shields.io/crates/d/ansi-parser.svg?style=flat-square)
+![pipeline status](https://img.shields.io/gitlab/pipeline/gitlab-org/gitlab-ce.svg)
+[![docs](https://docs.rs/ansi-parser/badge.svg?version=0.6.1)](https://docs.rs/ansi-parser/)
+![deps](https://img.shields.io/librariesio/release/cargo/ansi-parser.svg)
+![license](https://img.shields.io/crates/l/ansi-parser.svg)
+![downloads](https://img.shields.io/crates/d/ansi-parser.svg?style=flat-square)]
+
 # Ansi Escape Sequence Parser
 
+For a complete list of implemented sequences, see the [documentation](https://docs.rs/ansi-parser).
 
-This is a library for parsing ANSI escape sequences. Currently all the basic escape sequences
-are implemented:
- + Cursor Position
- + Cursor {Up, Down, Forward, Backward}
- + Cursor {Save, Restore}
- + Erase Display
- + Erase Line
- + Set Graphics mode
- + Set and Reset Text Mode
+This is done through a pulldown type parser, where an iterator is exposed. This essentially
+turns all of the ANSI sequences into enums and splits the string at every location that there
+was an ANSI Sequence.
 
- This is done through a pulldown type parser, where an iterator is exposed. This essentially
- turns all of the ANSI sequences into enums and splits the string at every location that there
- was an ANSI Sequence.
+Example:
 
- Example:
-
- ```rust
-
-use ansi_parser::{Output, ParserIterator};
+```rust
+use ansi_parser::{Output, AnsiParser};
+use ansi_parser::AnsiSequence;
 
 fn main() {
-    //Your input string here
-    let string = "...";
-    let parsed: Vec<Output> = ParserIterator::new(&string)
-        //Because it implements Iterator, you can use whatever
-        //your favorite iterator functions are.
-        .take(4)
+    //Parse the first two blocks in the list
+    //By parsing it this way, it allows you to iterate over the
+    //elements returned.
+    //
+    //The parser only every holds a reference to the data,
+    //so there is no allocation.
+    let parsed: Vec<Output> = "This is \u{1b}[3Asome text!"
+        .ansi_parse()
+        .take(2)
         .collect();
+
+    assert_eq!(
+        vec![
+            Output::TextBlock("This is "),
+            Output::Escape(AnsiSequence::CursorUp(3))
+        ],
+        parsed
+    );
 
     for block in parsed.into_iter() {
         match block {
-            TextBlock(text)   => println!("{}", text),
-            AnsiSequence(seq) => println!("{}", seq)
+            Output::TextBlock(text) => println!("{}", text),
+            Output::Escape(seq)     => println!("{}", seq)
         }
     }
 }
