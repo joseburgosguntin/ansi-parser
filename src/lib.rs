@@ -19,4 +19,4 @@ mod traits;
 /// was an ANSI Sequence.
 
 pub use enums::*;
-pub use traits::AnsiParser;
+pub use traits::*;
