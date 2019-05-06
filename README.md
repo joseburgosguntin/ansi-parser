@@ -1,8 +1,8 @@
-![pipeline status](https://img.shields.io/gitlab/pipeline/gitlab-org/gitlab-ce.svg)
+[![pipeline status](https://img.shields.io/gitlab/pipeline/gitlab-org/gitlab-ce.svg)](https://gitlab.com/davidbittner/ansi-parser/pipelines?ref=master)
 [![docs](https://docs.rs/ansi-parser/badge.svg?version=0.6.1)](https://docs.rs/ansi-parser/)
-![deps](https://img.shields.io/librariesio/release/cargo/ansi-parser.svg)
-![license](https://img.shields.io/crates/l/ansi-parser.svg)
-![downloads](https://img.shields.io/crates/d/ansi-parser.svg?style=flat-square)]
+[![deps](https://img.shields.io/librariesio/release/cargo/ansi-parser.svg)](https://gitlab.com/davidbittner/ansi-parser/blob/master/Cargo.toml)
+[![license](https://img.shields.io/crates/l/ansi-parser.svg)](https://www.mozilla.org/en-US/MPL/2.0/)
+[![downloads](https://img.shields.io/crates/d/ansi-parser.svg)]()
 
 # Ansi Escape Sequence Parser
 
