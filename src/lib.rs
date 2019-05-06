@@ -2,6 +2,7 @@
 
 mod enums;
 mod parsers;
+mod traits;
 
 ///This is a library for parsing ANSI escape sequences. Currently all the basic escape sequences
 ///are implemented:
@@ -18,6 +19,4 @@ mod parsers;
 /// was an ANSI Sequence.
 
 pub use enums::*;
-pub use parsers::{
-    ParserIterator
-};
+pub use traits::AnsiParser;
