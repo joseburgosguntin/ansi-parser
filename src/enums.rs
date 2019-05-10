@@ -82,6 +82,7 @@ impl Display for AnsiSequence {
             SetGraphicsMode(vec)
                 => {
                     match vec.len() {
+                        0 => write!(formatter, "[m"),
                         1 => write!(formatter, "[{}m", vec[0]),
                         2 => write!(formatter, "[{};{}m", vec[0], vec[1]),
                         3 => write!(formatter, "[{};{};{}m", vec[0], vec[1], vec[2]),
