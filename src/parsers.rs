@@ -118,11 +118,21 @@ named!(
 );
 
 named!(
+    graphics_mode4<&str, AnsiSequence>,
+    do_parse!(
+        tag!("[m") >>
+        (AnsiSequence::SetGraphicsMode(vec![]))
+    )
+);
+
+named!(
     graphics_mode<&str, AnsiSequence>,
     alt!(
           graphics_mode1
         | graphics_mode2
-        | graphics_mode3)
+        | graphics_mode3
+        | graphics_mode4
+    )
 );
 
 named!(
