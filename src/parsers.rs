@@ -29,6 +29,7 @@ named!(
 named!(
     cursor_pos<&str, AnsiSequence>,
     do_parse!(
+        tag!("[")       >>
         x: parse_int    >>
         tag!(";")       >>
         y: parse_int    >>
@@ -43,6 +44,7 @@ named!(
 named!(
     cursor_up<&str, AnsiSequence>,
     do_parse!(
+        tag!("[")       >>
         am: parse_int >>
         tag!("A")     >>
         (AnsiSequence::CursorUp(am))
@@ -52,6 +54,7 @@ named!(
 named!(
     cursor_down<&str, AnsiSequence>,
     do_parse!(
+        tag!("[")       >>
         am: parse_int >>
         tag!("B")     >>
         (AnsiSequence::CursorDown(am))
@@ -61,6 +64,7 @@ named!(
 named!(
     cursor_forward<&str, AnsiSequence>,
     do_parse!(
+        tag!("[")       >>
         am: parse_int >>
         tag!("C")     >>
         (AnsiSequence::CursorForward(am))
@@ -70,6 +74,7 @@ named!(
 named!(
     cursor_backward<&str, AnsiSequence>,
     do_parse!(
+        tag!("[")       >>
         am: parse_int >>
         tag!("D")     >>
         (AnsiSequence::CursorBackward(am))
@@ -79,6 +84,7 @@ named!(
 named!(
     graphics_mode1<&str, AnsiSequence>,
     do_parse!(
+        tag!("[")       >>
         val: parse_int >>
         tag!("m")      >>
         (AnsiSequence::SetGraphicsMode(vec![val]))
@@ -88,6 +94,7 @@ named!(
 named!(
     graphics_mode2<&str, AnsiSequence>,
     do_parse!(
+        tag!("[")       >>
         val1: parse_int >>
         tag!(";")       >>
         val2: parse_int >>
@@ -99,6 +106,7 @@ named!(
 named!(
     graphics_mode3<&str, AnsiSequence>,
     do_parse!(
+        tag!("[")       >>
         val1: parse_int >>
         tag!(";")       >>
         val2: parse_int >>
@@ -120,7 +128,7 @@ named!(
 named!(
     set_mode<&str, AnsiSequence>,
     do_parse!(
-        tag!("=")                        >>
+        tag_s!("[=")                        >>
         mode: parse_int                  >>
         conv: expr_res!(mode.try_into()) >>
         tag!("h")                        >>
@@ -131,7 +139,7 @@ named!(
 named!(
     reset_mode<&str, AnsiSequence>,
     do_parse!(
-        tag!("=")                        >>
+        tag_s!("[=")                        >>
         mode: parse_int                  >>
         conv: expr_res!(mode.try_into()) >>
         tag!("l")                        >>
@@ -139,31 +147,58 @@ named!(
     )
 );
 
-tag_parser!(cursor_save,           "s", AnsiSequence::CursorSave);
-tag_parser!(cursor_restore,        "u", AnsiSequence::CursorRestore);
-tag_parser!(erase_display,        "2J", AnsiSequence::EraseDisplay);
-tag_parser!(erase_line,            "K", AnsiSequence::EraseLine);
-tag_parser!(hide_cursor,        "?25l", AnsiSequence::HideCursor);
-tag_parser!(show_cursor,        "?25h", AnsiSequence::ShowCursor);
-tag_parser!(cursor_to_app,       "?1h", AnsiSequence::CursorToApp);
-tag_parser!(set_new_line_mode,   "20h", AnsiSequence::SetNewLineMode);
-tag_parser!(set_col_132,         "?3h", AnsiSequence::SetCol132);
-tag_parser!(set_smooth_scroll,   "?4h", AnsiSequence::SetSmoothScroll);
-tag_parser!(set_reverse_video,   "?5h", AnsiSequence::SetReverseVideo);
-tag_parser!(set_origin_rel,      "?6h", AnsiSequence::SetOriginRelative);
-tag_parser!(set_auto_wrap,       "?7h", AnsiSequence::SetAutoWrap);
-tag_parser!(set_auto_repeat,     "?8h", AnsiSequence::SetAutoRepeat);
-tag_parser!(set_interlacing,     "?9h", AnsiSequence::SetInterlacing);
-tag_parser!(set_linefeed,        "20l", AnsiSequence::SetLineFeedMode);
-tag_parser!(set_cursorkey,       "?1l", AnsiSequence::SetCursorKeyToCursor);
-tag_parser!(set_vt52,            "?2l", AnsiSequence::SetVT52);
-tag_parser!(set_col80,           "?3l", AnsiSequence::SetCol80);
-tag_parser!(set_jump_scroll,     "?4l", AnsiSequence::SetJumpScrolling);
-tag_parser!(set_normal_video,    "?5l", AnsiSequence::SetNormalVideo);
-tag_parser!(set_origin_abs,      "?6l", AnsiSequence::SetOriginAbsolute);
-tag_parser!(reset_auto_wrap,     "?7l", AnsiSequence::ResetAutoWrap);
-tag_parser!(reset_auto_repeat,   "?8l", AnsiSequence::ResetAutoRepeat);
-tag_parser!(reset_interlacing,   "?9l", AnsiSequence::ResetInterlacing);
+named!(
+    set_top_and_bottom<&str, AnsiSequence>,
+    do_parse!(
+        tag!("[")    >>
+        x: parse_int >>
+        tag!(";")    >>
+        y: parse_int >>
+        tag!("r")    >>
+        (AnsiSequence::SetTopAndBottom(x, y))
+    )
+);
+
+tag_parser!(cursor_save,           "[s", AnsiSequence::CursorSave);
+tag_parser!(cursor_restore,        "[u", AnsiSequence::CursorRestore);
+tag_parser!(erase_display,        "[2J", AnsiSequence::EraseDisplay);
+tag_parser!(erase_line,            "[K", AnsiSequence::EraseLine);
+tag_parser!(hide_cursor,        "[?25l", AnsiSequence::HideCursor);
+tag_parser!(show_cursor,        "[?25h", AnsiSequence::ShowCursor);
+tag_parser!(cursor_to_app,       "[?1h", AnsiSequence::CursorToApp);
+tag_parser!(set_new_line_mode,   "[20h", AnsiSequence::SetNewLineMode);
+tag_parser!(set_col_132,         "[?3h", AnsiSequence::SetCol132);
+tag_parser!(set_smooth_scroll,   "[?4h", AnsiSequence::SetSmoothScroll);
+tag_parser!(set_reverse_video,   "[?5h", AnsiSequence::SetReverseVideo);
+tag_parser!(set_origin_rel,      "[?6h", AnsiSequence::SetOriginRelative);
+tag_parser!(set_auto_wrap,       "[?7h", AnsiSequence::SetAutoWrap);
+tag_parser!(set_auto_repeat,     "[?8h", AnsiSequence::SetAutoRepeat);
+tag_parser!(set_interlacing,     "[?9h", AnsiSequence::SetInterlacing);
+tag_parser!(set_linefeed,        "[20l", AnsiSequence::SetLineFeedMode);
+tag_parser!(set_cursorkey,       "[?1l", AnsiSequence::SetCursorKeyToCursor);
+tag_parser!(set_vt52,            "[?2l", AnsiSequence::SetVT52);
+tag_parser!(set_col80,           "[?3l", AnsiSequence::SetCol80);
+tag_parser!(set_jump_scroll,     "[?4l", AnsiSequence::SetJumpScrolling);
+tag_parser!(set_normal_video,    "[?5l", AnsiSequence::SetNormalVideo);
+tag_parser!(set_origin_abs,      "[?6l", AnsiSequence::SetOriginAbsolute);
+tag_parser!(reset_auto_wrap,     "[?7l", AnsiSequence::ResetAutoWrap);
+tag_parser!(reset_auto_repeat,   "[?8l", AnsiSequence::ResetAutoRepeat);
+tag_parser!(reset_interlacing,   "[?9l", AnsiSequence::ResetInterlacing);
+
+tag_parser!(set_alternate_keypad, "=", AnsiSequence::SetAlternateKeypad);
+tag_parser!(set_numeric_keypad, ">", AnsiSequence::SetNumericKeypad);
+tag_parser!(set_uk_g0, "(A", AnsiSequence::SetUKG0);
+tag_parser!(set_uk_g1, ")A", AnsiSequence::SetUKG1);
+tag_parser!(set_us_g0, "(B", AnsiSequence::SetUSG0);
+tag_parser!(set_us_g1, ")B", AnsiSequence::SetUSG1);
+tag_parser!(set_g0_special,   "(0", AnsiSequence::SetG0SpecialChars);
+tag_parser!(set_g1_special,   ")0", AnsiSequence::SetG1SpecialChars);
+tag_parser!(set_g0_alternate, "(1", AnsiSequence::SetG0AlternateChar);
+tag_parser!(set_g1_alternate, ")1", AnsiSequence::SetG1AlternateChar);
+tag_parser!(set_g0_graph, "(2", AnsiSequence::SetG0AltAndSpecialGraph);
+tag_parser!(set_g1_graph, ")2", AnsiSequence::SetG1AltAndSpecialGraph);
+tag_parser!(set_single_shift2, "N", AnsiSequence::SetSingleShift2);
+tag_parser!(set_single_shift3, "O", AnsiSequence::SetSingleShift3);
 
 named!(
     combined<&str, AnsiSequence>,
@@ -201,13 +236,28 @@ named!(
         | reset_auto_wrap
         | reset_auto_repeat
         | reset_interlacing
+        | set_top_and_bottom
+        | set_alternate_keypad
+        | set_numeric_keypad
+        | set_uk_g0
+        | set_uk_g1
+        | set_us_g0
+        | set_us_g1
+        | set_g0_special
+        | set_g1_special
+        | set_g0_alternate
+        | set_g1_alternate
+        | set_g0_graph
+        | set_g1_graph
+        | set_single_shift2
+        | set_single_shift3
     )
 );
 
 named!(
     pub parse_escape<&str, Output>,
     do_parse!(
-        tag_s!("\u{1b}[") >>
+        tag_s!("\u{1b}") >>
         seq: combined     >>
         (Output::Escape(seq))
     )

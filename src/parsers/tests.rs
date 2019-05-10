@@ -64,6 +64,20 @@ test_parser!(reset_auto_wrap,   "\u{1b}[?7l");
 test_parser!(reset_auto_repeat, "\u{1b}[?8l");
 test_parser!(reset_interlacing, "\u{1b}[?9l");
 
+test_parser!(set_alternate_keypad, "\u{1b}=");
+test_parser!(set_numeric_keypad, "\u{1b}>");
+test_parser!(set_uk_g0, "\u{1b}(A");
+test_parser!(set_uk_g1, "\u{1b})A");
+test_parser!(set_us_g0, "\u{1b}(B");
+test_parser!(set_us_g1, "\u{1b})B");
+test_parser!(set_g0_special, "\u{1b}(0");
+test_parser!(set_g1_special, "\u{1b})0");
+test_parser!(set_g0_alternate, "\u{1b}(1");
+test_parser!(set_g1_alternate, "\u{1b})1");
+test_parser!(set_g0_graph, "\u{1b}(2");
+test_parser!(set_g1_graph, "\u{1b})2");
+test_parser!(set_single_shift2, "\u{1b}N");
+test_parser!(set_single_shift3, "\u{1b}O");
 
 #[test]
 fn test_parser_iterator() {
