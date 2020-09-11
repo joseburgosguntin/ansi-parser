@@ -135,6 +135,26 @@ named!(
     )
 );
 
+
+named!(
+    graphics_mode5<&str, AnsiSequence>,
+    do_parse!(
+        tag!("[")       >>
+        val1: parse_int >>
+        tag!(";")       >>
+        val2: parse_int >>
+        tag!(";")       >>
+        val3: parse_int >>
+        tag!(";")       >>
+        val4: parse_int >>
+        tag!(";")       >>
+        val5: parse_int >>
+        tag!("m")       >>
+        (AnsiSequence::SetGraphicsMode(vec![val1, val2, val3, val4, val5]))
+    )
+);
+
+
 named!(
     graphics_mode<&str, AnsiSequence>,
     alt!(
@@ -142,6 +162,7 @@ named!(
         | graphics_mode2
         | graphics_mode3
         | graphics_mode4
+        | graphics_mode5
     )
 );
 
