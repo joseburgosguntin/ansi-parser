@@ -21,13 +21,37 @@ macro_rules! test_parser {
     }
 }
 
-test_parser!(cursor_pos,     "\u{1b}[10;5H");
-test_parser!(cursor_up,      "\u{1b}[5A");
-test_parser!(cursor_down,    "\u{1b}[5B");
-test_parser!(cursor_forward, "\u{1b}[5C");
-test_parser!(cursor_backward,"\u{1b}[5D");
-test_parser!(cursor_save,    "\u{1b}[s");
-test_parser!(cursor_restore, "\u{1b}[u");
+macro_rules! test_def_val_parser {
+    ($name:ident, $string:expr) => {
+        #[test]
+        fn $name() {
+            let mut buff = String::new();
+            let ret = parse_escape($string);
+
+            assert!(ret.is_ok());
+            let ret = ret.unwrap().1;
+
+            write!(&mut buff, "{}", ret)
+                .unwrap();
+
+            let ret2 = parse_escape(&buff);
+            assert!(ret2.is_ok());
+
+            let ret2 = ret2.unwrap().1;
+            assert_eq!(ret, ret2);
+        }
+    }
+}
+
+test_def_val_parser!(cursor_pos_default, "\u{1b}[H");
+test_def_val_parser!(cursor_pos,         "\u{1b}[10;5H");
+test_def_val_parser!(cursor_up_default,  "\u{1b}[A");
+test_def_val_parser!(cursor_up,          "\u{1b}[5A");
+test_def_val_parser!(cursor_down,        "\u{1b}[5B");
+test_def_val_parser!(cursor_forward,     "\u{1b}[5C");
+test_def_val_parser!(cursor_backward,    "\u{1b}[5D");
+test_parser!(cursor_save,        "\u{1b}[s");
+test_parser!(cursor_restore,     "\u{1b}[u");
 
 test_parser!(erase_display, "\u{1b}[2J");
 test_parser!(erase_line,    "\u{1b}[K");
@@ -95,4 +119,17 @@ fn test_parser_iterator_failure() {
         .collect();
 
     assert_eq!(strings.len(), 6);
+}
+
+#[test]
+fn test_default_value() {
+    let strings: Vec<_> = "\x1b[H\x1b[123456H\x1b[;123456H\x1b[7asd;1234H\x1b[a;sd7H"
+        .ansi_parse()
+        .collect();
+    assert_eq!(strings.len(), 5);
+    assert_eq!(strings[0], Output::Escape(AnsiSequence::CursorPos(1,1)));
+    assert_eq!(strings[1], Output::Escape(AnsiSequence::CursorPos(123456,1)));
+    assert_eq!(strings[2], Output::Escape(AnsiSequence::CursorPos(1,123456)));
+    assert_eq!(strings[3], Output::TextBlock("\x1b[7asd;1234H"));
+    assert_eq!(strings[4], Output::TextBlock("\x1b[a;sd7H"));
 }
