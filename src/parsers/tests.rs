@@ -59,6 +59,7 @@ test_parser!(erase_line,    "\u{1b}[K");
 test_parser!(set_video_mode_a, "\u{1b}[4m");
 test_parser!(set_video_mode_b, "\u{1b}[4;42m");
 test_parser!(set_video_mode_c, "\u{1b}[4;31;42m");
+test_parser!(set_video_mode_d, "\u{1b}[4;31;42;42;42m");
 
 test_parser!(reset_mode, "\u{1b}[=13l");
 test_parser!(set_mode,   "\u{1b}[=7h");
