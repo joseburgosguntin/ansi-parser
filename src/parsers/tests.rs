@@ -133,3 +133,15 @@ fn test_default_value() {
     assert_eq!(strings[3], Output::TextBlock("\x1b[7asd;1234H"));
     assert_eq!(strings[4], Output::TextBlock("\x1b[a;sd7H"));
 }
+
+#[test]
+fn test_escape() {
+    let parts: Vec<_> = "\x1b\x1b[33mFoobar".ansi_parse().collect();
+    assert_eq!(
+        parts,
+        vec![
+            Output::Escape(AnsiSequence::Escape),
+            Output::TextBlock("[33mFoobar")
+        ]
+    );
+}

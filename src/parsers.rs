@@ -52,6 +52,14 @@ named!(
 );
 
 named!(
+    escape<&str, AnsiSequence>,
+    do_parse!(
+        tag!("\u{1b}") >>
+        (AnsiSequence::Escape)
+    )
+);
+
+named!(
     cursor_up<&str, AnsiSequence>,
     do_parse!(
         tag!("[")                >>
@@ -244,7 +252,8 @@ tag_parser!(set_single_shift3, "O", AnsiSequence::SetSingleShift3);
 named!(
     combined<&str, AnsiSequence>,
     alt!(
-          cursor_pos
+          escape
+        | cursor_pos
         | cursor_up
         | cursor_down
         | cursor_forward
