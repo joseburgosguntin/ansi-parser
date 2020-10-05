@@ -2,19 +2,20 @@ use crate::enums::{Output};
 use crate::parsers::parse_escape;
 
 pub trait AnsiParser {
-    fn ansi_parse<'a>(&'a self) -> AnsiParseIterator<'a>;
+    fn ansi_parse(&self) -> AnsiParseIterator<'_>;
 }
 
 impl AnsiParser for str {
-    fn ansi_parse<'a>(&'a self) -> AnsiParseIterator<'a> {
+    fn ansi_parse(&self) -> AnsiParseIterator<'_> {
         AnsiParseIterator {
             dat: self
         }
     }
 }
 
+#[cfg(any(feature = "std", test))]
 impl AnsiParser for String {
-    fn ansi_parse<'a>(&'a self) -> AnsiParseIterator<'a> {
+    fn ansi_parse(&self) -> AnsiParseIterator<'_> {
         AnsiParseIterator {
             dat: self
         }
@@ -40,7 +41,7 @@ impl<'a> Iterator for AnsiParseIterator<'a> {
 
                 if let Ok(ret) = res {
                     self.dat = &ret.0;
-                    Some(ret.1)
+                    Some(Output::Escape(ret.1))
                 }else{
                     let pos = self.dat[(loc+1)..].find('\u{1b}');
                     if let Some(loc) = pos {

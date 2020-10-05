@@ -1,4 +1,5 @@
 #![recursion_limit="256"]
+#![cfg_attr(not(any(feature = "std", test)), no_std)]
 
 mod enums;
 mod parsers;
@@ -20,3 +21,4 @@ mod traits;
 
 pub use enums::*;
 pub use traits::*;
+pub use parsers::parse_escape;
