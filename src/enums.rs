@@ -4,7 +4,7 @@ mod tests;
 use heapless::{Vec, consts::U5};
 
 ///The following are the implemented ANSI escape sequences. More to be added.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum AnsiSequence {
     CursorPos(u32, u32),
     CursorUp(u32),
