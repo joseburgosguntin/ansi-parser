@@ -58,10 +58,10 @@ use std::fmt::Display;
 impl Display for AnsiSequence {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(formatter, "\u{1b}")?;
-        
+
         use AnsiSequence::*;
         match self {
-            CursorPos(line, col) 
+            CursorPos(line, col)
                 => write!(formatter, "[{};{}H", line, col),
             CursorUp(amt)
                 => write!(formatter, "[{}A", amt),
@@ -86,6 +86,8 @@ impl Display for AnsiSequence {
                         1 => write!(formatter, "[{}m", vec[0]),
                         2 => write!(formatter, "[{};{}m", vec[0], vec[1]),
                         3 => write!(formatter, "[{};{};{}m", vec[0], vec[1], vec[2]),
+                        5 => write!(formatter, "[{};{};{};{};{}m", vec[0], vec[1],
+                            vec[2], vec[3], vec[4]),
                         _ => unreachable!()
                     }
                 },
