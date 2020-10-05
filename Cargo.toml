@@ -11,3 +11,8 @@ edition = "2018"
 
 [dependencies]
 nom = "4.2.3"
+heapless = "0.5.6"
+
+[features]
+std = []
+default = ["std"]

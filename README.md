@@ -45,4 +45,8 @@ fn main() {
         }
     }
 }
- ```
+```
+
+# `no_std` support
+
+`no_std` is supported via disabling the `std` feature in your `Cargo.toml`.
