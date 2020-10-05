@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests;
 
-use crate::{AnsiSequence, Output};
+use crate::AnsiSequence;
 
 use core::convert::TryInto;
 use heapless::Vec;
@@ -324,10 +324,10 @@ named!(
 );
 
 named!(
-    pub parse_escape<&str, Output>,
+    pub parse_escape<&str, AnsiSequence>,
     do_parse!(
         tag!("\u{1b}")    >>
         seq: combined     >>
-        (Output::Escape(seq))
+        (seq)
     )
 );

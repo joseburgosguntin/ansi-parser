@@ -41,7 +41,7 @@ impl<'a> Iterator for AnsiParseIterator<'a> {
 
                 if let Ok(ret) = res {
                     self.dat = &ret.0;
-                    Some(ret.1)
+                    Some(Output::Escape(ret.1))
                 }else{
                     let pos = self.dat[(loc+1)..].find('\u{1b}');
                     if let Some(loc) = pos {
