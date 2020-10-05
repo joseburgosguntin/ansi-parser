@@ -2,11 +2,11 @@ use crate::enums::{Output};
 use crate::parsers::parse_escape;
 
 pub trait AnsiParser {
-    fn ansi_parse<'a>(&'a self) -> AnsiParseIterator<'a>;
+    fn ansi_parse(&self) -> AnsiParseIterator<'_>;
 }
 
 impl AnsiParser for str {
-    fn ansi_parse<'a>(&'a self) -> AnsiParseIterator<'a> {
+    fn ansi_parse(&self) -> AnsiParseIterator<'_> {
         AnsiParseIterator {
             dat: self
         }
@@ -14,7 +14,7 @@ impl AnsiParser for str {
 }
 
 impl AnsiParser for String {
-    fn ansi_parse<'a>(&'a self) -> AnsiParseIterator<'a> {
+    fn ansi_parse(&self) -> AnsiParseIterator<'_> {
         AnsiParseIterator {
             dat: self
         }

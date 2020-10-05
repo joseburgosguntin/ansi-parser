@@ -169,7 +169,7 @@ named!(
 named!(
     set_mode<&str, AnsiSequence>,
     do_parse!(
-        tag_s!("[=")                        >>
+        tag!("[=")                       >>
         mode: parse_int                  >>
         conv: expr_res!(mode.try_into()) >>
         tag!("h")                        >>
@@ -180,7 +180,7 @@ named!(
 named!(
     reset_mode<&str, AnsiSequence>,
     do_parse!(
-        tag_s!("[=")                        >>
+        tag!("[=")                       >>
         mode: parse_int                  >>
         conv: expr_res!(mode.try_into()) >>
         tag!("l")                        >>
@@ -298,7 +298,7 @@ named!(
 named!(
     pub parse_escape<&str, Output>,
     do_parse!(
-        tag_s!("\u{1b}") >>
+        tag!("\u{1b}")    >>
         seq: combined     >>
         (Output::Escape(seq))
     )
