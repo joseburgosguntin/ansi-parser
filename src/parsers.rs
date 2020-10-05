@@ -26,15 +26,25 @@ named!(
     )
 );
 
+// TODO kind of ugly, would prefer to pass in the default so we could use it for
+// all escapes with defaults (not just those that default to 1).
+named!(
+    parse_def_cursor_int<&str, u32>,
+    map!(
+        nom::digit0,
+        |s: &str| s.parse::<u32>().unwrap_or(1)
+    )
+);
+
 named!(
     cursor_pos<&str, AnsiSequence>,
     do_parse!(
-        tag!("[")       >>
-        x: parse_int    >>
-        tag!(";")       >>
-        y: parse_int    >>
+        tag!("[")               >>
+        x: parse_def_cursor_int >>
+        opt!(tag!(";"))         >>
+        y: parse_def_cursor_int >>
         alt!(
-            tag!("H") | 
+            tag!("H") |
             tag!("f")
         )               >>
         (AnsiSequence::CursorPos(x, y))
@@ -42,11 +52,19 @@ named!(
 );
 
 named!(
+    escape<&str, AnsiSequence>,
+    do_parse!(
+        tag!("\u{1b}") >>
+        (AnsiSequence::Escape)
+    )
+);
+
+named!(
     cursor_up<&str, AnsiSequence>,
     do_parse!(
-        tag!("[")       >>
-        am: parse_int >>
-        tag!("A")     >>
+        tag!("[")                >>
+        am: parse_def_cursor_int >>
+        tag!("A")                >>
         (AnsiSequence::CursorUp(am))
     )
 );
@@ -54,9 +72,9 @@ named!(
 named!(
     cursor_down<&str, AnsiSequence>,
     do_parse!(
-        tag!("[")       >>
-        am: parse_int >>
-        tag!("B")     >>
+        tag!("[")                >>
+        am: parse_def_cursor_int >>
+        tag!("B")                >>
         (AnsiSequence::CursorDown(am))
     )
 );
@@ -64,9 +82,9 @@ named!(
 named!(
     cursor_forward<&str, AnsiSequence>,
     do_parse!(
-        tag!("[")       >>
-        am: parse_int >>
-        tag!("C")     >>
+        tag!("[")                >>
+        am: parse_def_cursor_int >>
+        tag!("C")                >>
         (AnsiSequence::CursorForward(am))
     )
 );
@@ -74,9 +92,9 @@ named!(
 named!(
     cursor_backward<&str, AnsiSequence>,
     do_parse!(
-        tag!("[")       >>
-        am: parse_int >>
-        tag!("D")     >>
+        tag!("[")                >>
+        am: parse_def_cursor_int >>
+        tag!("D")                >>
         (AnsiSequence::CursorBackward(am))
     )
 );
@@ -125,6 +143,26 @@ named!(
     )
 );
 
+
+named!(
+    graphics_mode5<&str, AnsiSequence>,
+    do_parse!(
+        tag!("[")       >>
+        val1: parse_int >>
+        tag!(";")       >>
+        val2: parse_int >>
+        tag!(";")       >>
+        val3: parse_int >>
+        tag!(";")       >>
+        val4: parse_int >>
+        tag!(";")       >>
+        val5: parse_int >>
+        tag!("m")       >>
+        (AnsiSequence::SetGraphicsMode(vec![val1, val2, val3, val4, val5]))
+    )
+);
+
+
 named!(
     graphics_mode<&str, AnsiSequence>,
     alt!(
@@ -132,6 +170,7 @@ named!(
         | graphics_mode2
         | graphics_mode3
         | graphics_mode4
+        | graphics_mode5
     )
 );
 
@@ -213,11 +252,12 @@ tag_parser!(set_single_shift3, "O", AnsiSequence::SetSingleShift3);
 named!(
     combined<&str, AnsiSequence>,
     alt!(
-          cursor_pos
+          escape
+        | cursor_pos
         | cursor_up
         | cursor_down
         | cursor_forward
-        | cursor_backward 
+        | cursor_backward
         | cursor_save
         | cursor_restore
         | erase_display
@@ -272,4 +312,3 @@ named!(
         (Output::Escape(seq))
     )
 );
-

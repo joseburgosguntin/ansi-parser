@@ -4,6 +4,7 @@ mod tests;
 ///The following are the implemented ANSI escape sequences. More to be added.
 #[derive(Debug, PartialEq)]
 pub enum AnsiSequence {
+    Escape,
     CursorPos(u32, u32),
     CursorUp(u32),
     CursorDown(u32),
@@ -61,6 +62,7 @@ impl Display for AnsiSequence {
         
         use AnsiSequence::*;
         match self {
+            Escape => write!(formatter, "\u{1b}"),
             CursorPos(line, col) 
                 => write!(formatter, "[{};{}H", line, col),
             CursorUp(amt)
