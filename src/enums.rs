@@ -1,6 +1,8 @@
 #[cfg(test)]
 mod tests;
 
+use heapless::{Vec, consts::U5};
+
 ///The following are the implemented ANSI escape sequences. More to be added.
 #[derive(Debug, PartialEq)]
 pub enum AnsiSequence {
@@ -13,7 +15,7 @@ pub enum AnsiSequence {
     CursorRestore,
     EraseDisplay,
     EraseLine,
-    SetGraphicsMode(Vec<u32>),
+    SetGraphicsMode(Vec<u8, U5>),
     SetMode(u8),
     ResetMode(u8),
     HideCursor,
@@ -54,9 +56,9 @@ pub enum AnsiSequence {
     SetTopAndBottom(u32, u32),
 }
 
-use std::fmt::Display;
+use core::fmt::{Display, Formatter, Result as DisplayResult};
 impl Display for AnsiSequence {
-    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+    fn fmt(&self, formatter: &mut Formatter) -> DisplayResult {
         write!(formatter, "\u{1b}")?;
         
         use AnsiSequence::*;
@@ -179,7 +181,7 @@ pub enum Output<'a> {
 }
 
 impl<'a> Display for Output<'a> {
-    fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
+    fn fmt(&self, formatter: &mut Formatter) -> DisplayResult {
         use Output::*;
         match self {
             TextBlock(txt) => write!(formatter, "{}", txt),

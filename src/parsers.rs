@@ -3,7 +3,8 @@ mod tests;
 
 use crate::{AnsiSequence, Output};
 
-use std::convert::TryInto;
+use core::convert::TryInto;
+use heapless::Vec;
 use nom::*;
 
 macro_rules! tag_parser {
@@ -97,7 +98,9 @@ named!(
         tag!("[")       >>
         val: parse_int >>
         tag!("m")      >>
-        (AnsiSequence::SetGraphicsMode(vec![val]))
+        val: expr_res!(val.try_into()) >>
+        conv: expr_res!(Vec::from_slice(&[val])) >>
+        (AnsiSequence::SetGraphicsMode(conv))
     )
 );
 
@@ -109,7 +112,13 @@ named!(
         tag!(";")       >>
         val2: parse_int >>
         tag!("m")       >>
-        (AnsiSequence::SetGraphicsMode(vec![val1, val2]))
+        val1: expr_res!(val1.try_into()) >>
+        val2: expr_res!(val2.try_into()) >>
+        conv: expr_res!(Vec::from_slice(&[
+            val1,
+            val2,
+        ])) >>
+        (AnsiSequence::SetGraphicsMode(conv))
     )
 );
 
@@ -123,7 +132,15 @@ named!(
         tag!(";")       >>
         val3: parse_int >>
         tag!("m")       >>
-        (AnsiSequence::SetGraphicsMode(vec![val1, val2, val3]))
+        val1: expr_res!(val1.try_into()) >>
+        val2: expr_res!(val2.try_into()) >>
+        val3: expr_res!(val3.try_into()) >>
+        conv: expr_res!(Vec::from_slice(&[
+            val1,
+            val2,
+            val3,
+        ])) >>
+        (AnsiSequence::SetGraphicsMode(conv))
     )
 );
 
@@ -131,10 +148,9 @@ named!(
     graphics_mode4<&str, AnsiSequence>,
     do_parse!(
         tag!("[m") >>
-        (AnsiSequence::SetGraphicsMode(vec![]))
+        (AnsiSequence::SetGraphicsMode(Vec::new()))
     )
 );
-
 
 named!(
     graphics_mode5<&str, AnsiSequence>,
@@ -150,7 +166,19 @@ named!(
         tag!(";")       >>
         val5: parse_int >>
         tag!("m")       >>
-        (AnsiSequence::SetGraphicsMode(vec![val1, val2, val3, val4, val5]))
+        val1: expr_res!(val1.try_into()) >>
+        val2: expr_res!(val2.try_into()) >>
+        val3: expr_res!(val3.try_into()) >>
+        val4: expr_res!(val4.try_into()) >>
+        val5: expr_res!(val5.try_into()) >>
+        conv: expr_res!(Vec::from_slice(&[
+            val1,
+            val2,
+            val3,
+            val4,
+            val5,
+        ])) >>
+        (AnsiSequence::SetGraphicsMode(conv))
     )
 );
 

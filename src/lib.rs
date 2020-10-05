@@ -1,4 +1,5 @@
 #![recursion_limit="256"]
+#![cfg_attr(not(any(feature = "std", test)), no_std)]
 
 mod enums;
 mod parsers;
