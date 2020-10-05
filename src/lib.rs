@@ -21,3 +21,4 @@ mod traits;
 
 pub use enums::*;
 pub use traits::*;
+pub use parsers::parse_escape;
