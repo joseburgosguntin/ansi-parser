@@ -30,7 +30,7 @@ impl<'a> Iterator for AnsiParseIterator<'a> {
     type Item = Output<'a>;
     
     fn next(&mut self) -> Option<Self::Item> {
-        if self.dat == "" {
+        if self.dat.is_empty() {
             return None;
         }
 
@@ -40,7 +40,7 @@ impl<'a> Iterator for AnsiParseIterator<'a> {
                 let res = parse_escape(&self.dat[loc..]);
 
                 if let Ok(ret) = res {
-                    self.dat = &ret.0;
+                    self.dat = ret.0;
                     Some(Output::Escape(ret.1))
                 }else{
                     let pos = self.dat[(loc+1)..].find('\u{1b}');
@@ -64,7 +64,7 @@ impl<'a> Iterator for AnsiParseIterator<'a> {
                 let temp = &self.dat[..loc];
                 self.dat = &self.dat[loc..];
 
-                Some(Output::TextBlock(&temp))
+                Some(Output::TextBlock(temp))
             }
         }else{
             let temp = self.dat;

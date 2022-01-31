@@ -109,20 +109,20 @@ test_parser!(set_single_shift3, "\u{1b}O");
 
 #[test]
 fn test_parser_iterator() {
-    let strings: Vec<_> = "\x1b[=25l\x1b[=7l\x1b[0m\x1b[36m\x1b[1m-`"
+    let count = "\x1b[=25l\x1b[=7l\x1b[0m\x1b[36m\x1b[1m-`"
         .ansi_parse()
-        .collect();
+        .count();
 
-    assert_eq!(strings.len(), 6);
+    assert_eq!(count, 6);
 }
 
 #[test]
 fn test_parser_iterator_failure() {
-    let strings: Vec<_> = "\x1b[=25l\x1b[=7l\x1b[0m\x1b[36;1;15;2m\x1b[1m-`"
+    let count = "\x1b[=25l\x1b[=7l\x1b[0m\x1b[36;1;15;2m\x1b[1m-`"
         .ansi_parse()
-        .collect();
+        .count();
 
-    assert_eq!(strings.len(), 6);
+    assert_eq!(count, 6);
 }
 
 #[test]
