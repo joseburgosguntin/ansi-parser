@@ -190,7 +190,6 @@ named!(
     )
 );
 
-
 named!(
     graphics_mode<&str, AnsiSequence>,
     alt!(
@@ -236,31 +235,31 @@ named!(
     )
 );
 
-tag_parser!(cursor_save,           "[s", AnsiSequence::CursorSave);
-tag_parser!(cursor_restore,        "[u", AnsiSequence::CursorRestore);
-tag_parser!(erase_display,        "[2J", AnsiSequence::EraseDisplay);
-tag_parser!(erase_line,            "[K", AnsiSequence::EraseLine);
-tag_parser!(hide_cursor,        "[?25l", AnsiSequence::HideCursor);
-tag_parser!(show_cursor,        "[?25h", AnsiSequence::ShowCursor);
-tag_parser!(cursor_to_app,       "[?1h", AnsiSequence::CursorToApp);
-tag_parser!(set_new_line_mode,   "[20h", AnsiSequence::SetNewLineMode);
-tag_parser!(set_col_132,         "[?3h", AnsiSequence::SetCol132);
-tag_parser!(set_smooth_scroll,   "[?4h", AnsiSequence::SetSmoothScroll);
-tag_parser!(set_reverse_video,   "[?5h", AnsiSequence::SetReverseVideo);
-tag_parser!(set_origin_rel,      "[?6h", AnsiSequence::SetOriginRelative);
-tag_parser!(set_auto_wrap,       "[?7h", AnsiSequence::SetAutoWrap);
-tag_parser!(set_auto_repeat,     "[?8h", AnsiSequence::SetAutoRepeat);
-tag_parser!(set_interlacing,     "[?9h", AnsiSequence::SetInterlacing);
-tag_parser!(set_linefeed,        "[20l", AnsiSequence::SetLineFeedMode);
-tag_parser!(set_cursorkey,       "[?1l", AnsiSequence::SetCursorKeyToCursor);
-tag_parser!(set_vt52,            "[?2l", AnsiSequence::SetVT52);
-tag_parser!(set_col80,           "[?3l", AnsiSequence::SetCol80);
-tag_parser!(set_jump_scroll,     "[?4l", AnsiSequence::SetJumpScrolling);
-tag_parser!(set_normal_video,    "[?5l", AnsiSequence::SetNormalVideo);
-tag_parser!(set_origin_abs,      "[?6l", AnsiSequence::SetOriginAbsolute);
-tag_parser!(reset_auto_wrap,     "[?7l", AnsiSequence::ResetAutoWrap);
-tag_parser!(reset_auto_repeat,   "[?8l", AnsiSequence::ResetAutoRepeat);
-tag_parser!(reset_interlacing,   "[?9l", AnsiSequence::ResetInterlacing);
+tag_parser!(cursor_save, "[s", AnsiSequence::CursorSave);
+tag_parser!(cursor_restore, "[u", AnsiSequence::CursorRestore);
+tag_parser!(erase_display, "[2J", AnsiSequence::EraseDisplay);
+tag_parser!(erase_line, "[K", AnsiSequence::EraseLine);
+tag_parser!(hide_cursor, "[?25l", AnsiSequence::HideCursor);
+tag_parser!(show_cursor, "[?25h", AnsiSequence::ShowCursor);
+tag_parser!(cursor_to_app, "[?1h", AnsiSequence::CursorToApp);
+tag_parser!(set_new_line_mode, "[20h", AnsiSequence::SetNewLineMode);
+tag_parser!(set_col_132, "[?3h", AnsiSequence::SetCol132);
+tag_parser!(set_smooth_scroll, "[?4h", AnsiSequence::SetSmoothScroll);
+tag_parser!(set_reverse_video, "[?5h", AnsiSequence::SetReverseVideo);
+tag_parser!(set_origin_rel, "[?6h", AnsiSequence::SetOriginRelative);
+tag_parser!(set_auto_wrap, "[?7h", AnsiSequence::SetAutoWrap);
+tag_parser!(set_auto_repeat, "[?8h", AnsiSequence::SetAutoRepeat);
+tag_parser!(set_interlacing, "[?9h", AnsiSequence::SetInterlacing);
+tag_parser!(set_linefeed, "[20l", AnsiSequence::SetLineFeedMode);
+tag_parser!(set_cursorkey, "[?1l", AnsiSequence::SetCursorKeyToCursor);
+tag_parser!(set_vt52, "[?2l", AnsiSequence::SetVT52);
+tag_parser!(set_col80, "[?3l", AnsiSequence::SetCol80);
+tag_parser!(set_jump_scroll, "[?4l", AnsiSequence::SetJumpScrolling);
+tag_parser!(set_normal_video, "[?5l", AnsiSequence::SetNormalVideo);
+tag_parser!(set_origin_abs, "[?6l", AnsiSequence::SetOriginAbsolute);
+tag_parser!(reset_auto_wrap, "[?7l", AnsiSequence::ResetAutoWrap);
+tag_parser!(reset_auto_repeat, "[?8l", AnsiSequence::ResetAutoRepeat);
+tag_parser!(reset_interlacing, "[?9l", AnsiSequence::ResetInterlacing);
 
 tag_parser!(set_alternate_keypad, "=", AnsiSequence::SetAlternateKeypad);
 tag_parser!(set_numeric_keypad, ">", AnsiSequence::SetNumericKeypad);
@@ -268,8 +267,8 @@ tag_parser!(set_uk_g0, "(A", AnsiSequence::SetUKG0);
 tag_parser!(set_uk_g1, ")A", AnsiSequence::SetUKG1);
 tag_parser!(set_us_g0, "(B", AnsiSequence::SetUSG0);
 tag_parser!(set_us_g1, ")B", AnsiSequence::SetUSG1);
-tag_parser!(set_g0_special,   "(0", AnsiSequence::SetG0SpecialChars);
-tag_parser!(set_g1_special,   ")0", AnsiSequence::SetG1SpecialChars);
+tag_parser!(set_g0_special, "(0", AnsiSequence::SetG0SpecialChars);
+tag_parser!(set_g1_special, ")0", AnsiSequence::SetG1SpecialChars);
 tag_parser!(set_g0_alternate, "(1", AnsiSequence::SetG0AlternateChar);
 tag_parser!(set_g1_alternate, ")1", AnsiSequence::SetG1AlternateChar);
 tag_parser!(set_g0_graph, "(2", AnsiSequence::SetG0AltAndSpecialGraph);
