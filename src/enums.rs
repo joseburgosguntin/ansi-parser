@@ -179,7 +179,7 @@ impl Display for AnsiSequence {
 ///This is what is outputted by the parsing iterator.
 ///Each block contains either straight-up text, or simply
 ///an ANSI escape sequence.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Output<'a> {
     TextBlock(&'a str),
     Escape(AnsiSequence)
