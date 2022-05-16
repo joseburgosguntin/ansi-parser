@@ -1,4 +1,4 @@
-#![recursion_limit="256"]
+#![recursion_limit = "256"]
 #![cfg_attr(not(any(feature = "std", test)), no_std)]
 
 mod enums;
@@ -18,7 +18,6 @@ mod traits;
 /// This is done through a pulldown type parser, where an iterator is exposed. This essentially
 /// turns all of the ANSI sequences into enums and splits the string at every location that there
 /// was an ANSI Sequence.
-
 pub use enums::*;
-pub use traits::*;
 pub use parsers::parse_escape;
+pub use traits::*;
