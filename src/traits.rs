@@ -18,6 +18,7 @@ impl AnsiParser for String {
     }
 }
 
+#[derive(Debug)]
 pub struct AnsiParseIterator<'a> {
     dat: &'a str,
 }
