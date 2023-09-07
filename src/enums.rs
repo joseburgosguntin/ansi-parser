@@ -15,6 +15,7 @@ pub enum AnsiSequence {
     CursorSave,
     CursorRestore,
     EraseDisplay,
+    EraseDisplayFromCursor,
     EraseLine,
     SetGraphicsMode(Vec<u8, U5>),
     SetMode(u8),
@@ -73,6 +74,7 @@ impl Display for AnsiSequence {
             CursorSave => write!(formatter, "[s"),
             CursorRestore => write!(formatter, "[u"),
             EraseDisplay => write!(formatter, "[2J"),
+            EraseDisplayFromCursor => write!(formatter, "[J"),
             EraseLine => write!(formatter, "[K"),
             SetGraphicsMode(vec) => match vec.len() {
                 0 => write!(formatter, "[m"),

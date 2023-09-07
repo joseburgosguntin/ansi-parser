@@ -238,6 +238,11 @@ named!(
 tag_parser!(cursor_save, "[s", AnsiSequence::CursorSave);
 tag_parser!(cursor_restore, "[u", AnsiSequence::CursorRestore);
 tag_parser!(erase_display, "[2J", AnsiSequence::EraseDisplay);
+tag_parser!(
+    erase_display_from_cursor,
+    "[J",
+    AnsiSequence::EraseDisplayFromCursor
+);
 tag_parser!(erase_line, "[K", AnsiSequence::EraseLine);
 tag_parser!(hide_cursor, "[?25l", AnsiSequence::HideCursor);
 tag_parser!(show_cursor, "[?25h", AnsiSequence::ShowCursor);
@@ -288,6 +293,7 @@ named!(
         | cursor_save
         | cursor_restore
         | erase_display
+        | erase_display_from_cursor
         | erase_line
         | graphics_mode
         | set_mode
